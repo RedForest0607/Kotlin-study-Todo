@@ -2,20 +2,24 @@ package com.example.studyboard
 
 import com.example.studyboard.dto.TodoResponse
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.collection.IsEmptyCollection
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.test.context.web.WebAppConfiguration
+import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import java.util.*
 
+
 @DataJpaTest
-class RepositoryTest @Autowired constructor(
-    val entityManager: TestEntityManager,
-    val todoRepository: TodoRepository
+class RepositoryTest (
+    @Autowired val entityManager: TestEntityManager,
+    @Autowired val todoRepository: TodoRepository
 ){
+
     @Test
     fun `todo save and get test`() {
         val newTodo = Todo( "new todo!!!")
@@ -42,7 +46,7 @@ class RepositoryTest @Autowired constructor(
         entityManager.persist(newTodo1)
 
         val todo: Optional<Todo> = todoRepository.findById(1)
-        //todo.todoone update
+
         entityManager.persist(todo)
         entityManager.flush()
     }

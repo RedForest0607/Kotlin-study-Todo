@@ -1,5 +1,6 @@
 package com.example.studyboard
 
+import com.example.studyboard.dto.TodoDTO
 import com.example.studyboard.dto.TodoRequest
 import com.example.studyboard.dto.TodoResponse
 import org.springframework.web.bind.annotation.*
@@ -10,24 +11,19 @@ class TodoController (
     private val todoService: TodoService
     ){
 
-    //todo 저장
     @PostMapping("/")
-    fun saveTodo(@RequestBody todoRequest: TodoRequest): TodoResponse = todoService.saveTodo(todoRequest)
+    fun saveTodo(@RequestBody todoDTO: TodoDTO): TodoDTO = todoService.saveTodo(todoDTO)
 
-    //todo 조회
     @GetMapping("/{id}")
-    fun getTodo(@PathVariable id: Long): TodoResponse = todoService.findTodoOne(id)
+    fun getTodo(@PathVariable id: Long): TodoDTO = todoService.findTodoOne(id)
 
-    //todo list 조회
     @GetMapping("/list")
-    fun getTodoList(): List<TodoResponse> = todoService.findTodoList()
+    fun findTodoList(): List<TodoDTO> = todoService.findTodoList()
 
-    //todo 수정
     @PutMapping("/{id}")
-    fun updateTodo(@PathVariable id: Long, @RequestBody todoRequest: TodoRequest): TodoResponse = todoService.updateTodo(id, todoRequest)
+    fun updateTodo(@PathVariable id: Long, @RequestBody todoDTO: TodoDTO): TodoDTO = todoService.updateTodo(id, todoDTO)
 
-    //todo 삭제
     @DeleteMapping("/{id}")
-    fun deleteTodo(@PathVariable id: Long): TodoResponse = todoService.deleteTodo(id)
+    fun deleteTodo(@PathVariable id: Long): TodoDTO = todoService.deleteTodo(id)
 
 }

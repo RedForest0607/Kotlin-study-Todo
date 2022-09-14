@@ -1,17 +1,17 @@
 package com.example.studyboard
 
+import com.example.studyboard.dto.TodoDTO
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 
 @Entity
 class Todo (
-    var todoone: String,
+    val todoone: String,
     @Id @GeneratedValue
     val id: Long? = null
 )
+//entity 변수는 무조건 val!!!!!!!!!!!!!!!!!!!
 
-data class  CommonExceptionResponse (
-    val code: String,
-    val message: String
-)
+fun Todo.toDTO() = TodoDTO(todoone = this.todoone, id = this.id)
+

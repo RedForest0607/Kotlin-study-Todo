@@ -25,7 +25,7 @@ class ExceptionHandler {
         e.printStackTrace()
         return ResponseEntity(
             CommonExceptionResponse(
-                code = "INTERNAL_SERVER_ERROR",
+                code = 500,
                 message = e.message?: "알 수 없는 오류",
             ),
             HttpStatus.INTERNAL_SERVER_ERROR,

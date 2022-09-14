@@ -1,9 +1,8 @@
 package com.example.studyboard
 
-import com.example.studyboard.dto.TodoRequest
-import com.example.studyboard.dto.TodoResponse
+import com.example.studyboard.dto.TodoDTO
+import com.example.studyboard.dto.toEntity
 import com.example.studyboard.exception.NotFoundTodoIdException
-import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -12,36 +11,37 @@ import javax.transaction.Transactional
 class TodoService(private val todoRepository: TodoRepository) {
 
     @Transactional
-    fun saveTodo(todoRequest: TodoRequest): TodoResponse {
-        val id = todoRepository.save(todoRequest.toEntity()).id
+    fun saveTodo(todoDTO: TodoDTO): TodoDTO {
+        val id = todoRepository.save(todoDTO.toEntity()).id
         return findTodoOne(id!!)
     }
 
     @Transactional
-    fun findTodoOne(id: Long): TodoResponse {
+    fun findTodoOne(id: Long): TodoDTO {
         //findByIdOrNull -> kotlin에서 nullable 객체를 받을 수 있도록한 함수
         val todo = todoRepository.findByIdOrNull(id)?: throw NotFoundTodoIdException(id)
-        return TodoResponse(todo)
+        return todo.toDTO()
     }
 
     @Transactional
-    fun findTodoList() : List<TodoResponse> = todoRepository.findAllBy()
+    fun findTodoList() : List<TodoDTO> = todoRepository.findAll().map { it.toDTO() }
+    //return 값이 Iterable이므로 map으로 변환
 
     @Transactional
-    fun updateTodo(id: Long, request: TodoRequest) : TodoResponse {
+    fun updateTodo(id: Long, todoDTO: TodoDTO): TodoDTO {
         val todo = todoRepository.findByIdOrNull(id)?: throw NotFoundTodoIdException(id)
-        todo.todoone = request.todoone
-        todoRepository.save(todo)
-
-        return TodoResponse(todo)
+        val updateTodo = todo.toDTO().copy(id = todo.id, todoone = todoDTO.todoone)
+        print(updateTodo.toEntity().id)
+        val nextodo = todoRepository.save(updateTodo.toEntity())
+        return nextodo.toDTO()
     }
 
     @Transactional
-    fun deleteTodo(id: Long) : TodoResponse {
+    fun deleteTodo(id: Long) : TodoDTO {
         val todo = todoRepository.findByIdOrNull(id)?: throw NotFoundTodoIdException(id)
         todoRepository.delete(todo)
 
-        return TodoResponse(todo)
+        return todo.toDTO()
     }
 
 }
